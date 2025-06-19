@@ -1,12 +1,45 @@
-// Update this page (the content is just a fallback if you fail to update the page)
+
+import { useState } from 'react';
+import { useAppSelector } from '@/store/hooks';
+import Header from '@/components/Header';
+import HomePage from '@/components/HomePage';
+import Dashboard from '@/components/Dashboard';
+import AuthModal from '@/components/AuthModal';
 
 const Index = () => {
+  const [showAuthModal, setShowAuthModal] = useState(false);
+  const [currentView, setCurrentView] = useState<'home' | 'dashboard'>('home');
+  const { isAuthenticated } = useAppSelector((state) => state.auth);
+
+  const handleAuthClick = () => {
+    setShowAuthModal(true);
+  };
+
+  const handleDashboardClick = () => {
+    setCurrentView('dashboard');
+  };
+
+  const handleHomeClick = () => {
+    setCurrentView('home');
+  };
+
   return (
-    <div className="min-h-screen flex items-center justify-center bg-background">
-      <div className="text-center">
-        <h1 className="text-4xl font-bold mb-4">Welcome to Your Blank App</h1>
-        <p className="text-xl text-muted-foreground">Start building your amazing project here!</p>
-      </div>
+    <div className="min-h-screen bg-background">
+      <Header 
+        onAuthClick={handleAuthClick}
+        onDashboardClick={handleDashboardClick}
+      />
+      
+      {currentView === 'home' ? (
+        <HomePage onAuthClick={handleAuthClick} />
+      ) : (
+        isAuthenticated && <Dashboard />
+      )}
+      
+      <AuthModal 
+        isOpen={showAuthModal}
+        onClose={() => setShowAuthModal(false)}
+      />
     </div>
   );
 };
