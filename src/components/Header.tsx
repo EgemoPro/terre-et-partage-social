@@ -28,14 +28,14 @@ const Header = ({ onAuthClick, onDashboardClick }: HeaderProps) => {
             <div className="w-8 h-8 bg-earth-gradient rounded-lg flex items-center justify-center">
               <Sprout className="w-5 h-5 text-white" />
             </div>
-            <span className="text-xl font-bold text-gray-900">Terre & Partage</span>
+            <a href="/" className="text-xl font-bold text-gray-900">Terre & Partage</a>
           </div>
 
           {/* Desktop Navigation */}
           <nav className="hidden md:flex items-center space-x-8">
-            <a href="#" className="text-gray-600 hover:text-green-600 transition-colors">Accueil</a>
-            <a href="#" className="text-gray-600 hover:text-green-600 transition-colors">Comment ça marche</a>
-            <a href="#" className="text-gray-600 hover:text-green-600 transition-colors">Nos cultivateurs</a>
+            <a href="/" className="text-gray-600 hover:text-green-600 transition-colors">Accueil</a>
+            <a href="/comment-ca-marche" className="text-gray-600 hover:text-green-600 transition-colors">Comment ça marche</a>
+            <a href="/cultivateurs" className="text-gray-600 hover:text-green-600 transition-colors">Nos cultivateurs</a>
           </nav>
 
           {/* Auth/User Menu */}
@@ -50,6 +50,12 @@ const Header = ({ onAuthClick, onDashboardClick }: HeaderProps) => {
                   <User className="w-4 h-4 mr-2" />
                   Tableau de bord
                 </Button>
+                <a
+                  href="/profil"
+                  className="text-gray-600 hover:text-green-600 transition-colors"
+                >
+                  Mon profil
+                </a>
                 <Button
                   variant="ghost"
                   onClick={handleLogout}
@@ -87,9 +93,9 @@ const Header = ({ onAuthClick, onDashboardClick }: HeaderProps) => {
         {isMenuOpen && (
           <div className="md:hidden py-4 border-t border-green-100">
             <nav className="flex flex-col space-y-4">
-              <a href="#" className="text-gray-600 hover:text-green-600 transition-colors">Accueil</a>
-              <a href="#" className="text-gray-600 hover:text-green-600 transition-colors">Comment ça marche</a>
-              <a href="#" className="text-gray-600 hover:text-green-600 transition-colors">Nos cultivateurs</a>
+              <a href="/" className="text-gray-600 hover:text-green-600 transition-colors">Accueil</a>
+              <a href="/comment-ca-marche" className="text-gray-600 hover:text-green-600 transition-colors">Comment ça marche</a>
+              <a href="/cultivateurs" className="text-gray-600 hover:text-green-600 transition-colors">Nos cultivateurs</a>
               {isAuthenticated ? (
                 <>
                   <Button
@@ -100,6 +106,12 @@ const Header = ({ onAuthClick, onDashboardClick }: HeaderProps) => {
                     <User className="w-4 h-4 mr-2" />
                     Tableau de bord
                   </Button>
+                  <a
+                    href="/profil"
+                    className="text-gray-600 hover:text-green-600 transition-colors"
+                  >
+                    Mon profil
+                  </a>
                   <Button
                     variant="ghost"
                     onClick={handleLogout}
