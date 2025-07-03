@@ -1,4 +1,3 @@
-
 import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Menu, X, Sprout, User, LogOut } from 'lucide-react';
@@ -36,6 +35,7 @@ const Header = ({ onAuthClick, onDashboardClick }: HeaderProps) => {
             <a href="/" className="text-gray-600 hover:text-green-600 transition-colors">Accueil</a>
             <a href="/comment-ca-marche" className="text-gray-600 hover:text-green-600 transition-colors">Comment ça marche</a>
             <a href="/cultivateurs" className="text-gray-600 hover:text-green-600 transition-colors">Nos cultivateurs</a>
+            <a href="/mise-en-relation" className="text-gray-600 hover:text-green-600 transition-colors">Mise en relation</a>
             <a href="/devenir-cultivateur" className="text-gray-600 hover:text-green-600 transition-colors">Devenir cultivateur</a>
           </nav>
 
@@ -97,6 +97,7 @@ const Header = ({ onAuthClick, onDashboardClick }: HeaderProps) => {
               <a href="/" className="text-gray-600 hover:text-green-600 transition-colors">Accueil</a>
               <a href="/comment-ca-marche" className="text-gray-600 hover:text-green-600 transition-colors">Comment ça marche</a>
               <a href="/cultivateurs" className="text-gray-600 hover:text-green-600 transition-colors">Nos cultivateurs</a>
+              <a href="/mise-en-relation" className="text-gray-600 hover:text-green-600 transition-colors">Mise en relation</a>
               <a href="/devenir-cultivateur" className="text-gray-600 hover:text-green-600 transition-colors">Devenir cultivateur</a>
               {isAuthenticated ? (
                 <>

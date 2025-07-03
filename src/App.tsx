@@ -1,4 +1,3 @@
-
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -11,6 +10,7 @@ import HowItWorks from "./pages/HowItWorks";
 import Cultivators from "./pages/Cultivators";
 import Profile from "./pages/Profile";
 import BecomeCultivator from "./pages/BecomeCultivator";
+import Connections from "./pages/Connections";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -27,6 +27,7 @@ const App = () => (
             <Route path="/comment-ca-marche" element={<HowItWorks />} />
             <Route path="/cultivateurs" element={<Cultivators />} />
             <Route path="/devenir-cultivateur" element={<BecomeCultivator />} />
+            <Route path="/mise-en-relation" element={<Connections />} />
             <Route path="/profil" element={<Profile />} />
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
             <Route path="*" element={<NotFound />} />
