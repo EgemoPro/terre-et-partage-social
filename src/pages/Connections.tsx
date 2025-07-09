@@ -1,4 +1,3 @@
-
 import { useState } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -24,8 +23,8 @@ interface CultivatorProfile {
 
 const Connections = () => {
   const [searchTerm, setSearchTerm] = useState('');
-  const [locationFilter, setLocationFilter] = useState('');
-  const [specialtyFilter, setSpecialtyFilter] = useState('');
+  const [locationFilter, setLocationFilter] = useState('all');
+  const [specialtyFilter, setSpecialtyFilter] = useState('all');
 
   const mockCultivators: CultivatorProfile[] = [
     {
@@ -75,8 +74,8 @@ const Connections = () => {
   const filteredCultivators = cultivators.filter(cultivator => {
     const matchesSearch = cultivator.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
                          cultivator.specialties.some(s => s.toLowerCase().includes(searchTerm.toLowerCase()));
-    const matchesLocation = !locationFilter || cultivator.location.includes(locationFilter);
-    const matchesSpecialty = !specialtyFilter || cultivator.specialties.includes(specialtyFilter);
+    const matchesLocation = locationFilter === 'all' || cultivator.location.includes(locationFilter);
+    const matchesSpecialty = specialtyFilter === 'all' || cultivator.specialties.includes(specialtyFilter);
     
     return matchesSearch && matchesLocation && matchesSpecialty;
   });
@@ -121,7 +120,7 @@ const Connections = () => {
                   <SelectValue placeholder="Région" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="">Toutes les régions</SelectItem>
+                  <SelectItem value="all">Toutes les régions</SelectItem>
                   <SelectItem value="Provence">Provence-Alpes-Côte d'Azur</SelectItem>
                   <SelectItem value="Normandie">Normandie</SelectItem>
                   <SelectItem value="Île-de-France">Île-de-France</SelectItem>
@@ -132,7 +131,7 @@ const Connections = () => {
                   <SelectValue placeholder="Spécialité" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="">Toutes les spécialités</SelectItem>
+                  <SelectItem value="all">Toutes les spécialités</SelectItem>
                   <SelectItem value="Légumes bio">Légumes bio</SelectItem>
                   <SelectItem value="Permaculture">Permaculture</SelectItem>
                   <SelectItem value="Céréales">Céréales</SelectItem>
