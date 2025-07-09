@@ -1,8 +1,10 @@
+
 import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Menu, X, Sprout, User, LogOut } from 'lucide-react';
 import { useAppSelector, useAppDispatch } from '@/store/hooks';
 import { logout } from '@/store/slices/authSlice';
+import RoleBadge from './RoleBadge';
 
 interface HeaderProps {
   onAuthClick: () => void;
@@ -65,10 +67,13 @@ const Header = ({ onAuthClick, onDashboardClick }: HeaderProps) => {
                   <LogOut className="w-4 h-4 mr-2" />
                   Déconnexion
                 </Button>
-                <div className="w-8 h-8 bg-green-500 rounded-full flex items-center justify-center">
-                  <span className="text-white text-sm font-medium">
-                    {user?.name.charAt(0).toUpperCase()}
-                  </span>
+                <div className="flex items-center space-x-2">
+                  <div className="w-8 h-8 bg-green-500 rounded-full flex items-center justify-center">
+                    <span className="text-white text-sm font-medium">
+                      {user?.name.charAt(0).toUpperCase()}
+                    </span>
+                  </div>
+                  {user?.role && <RoleBadge role={user.role} />}
                 </div>
               </div>
             ) : (
@@ -101,6 +106,15 @@ const Header = ({ onAuthClick, onDashboardClick }: HeaderProps) => {
               <a href="/devenir-cultivateur" className="text-gray-600 hover:text-green-600 transition-colors">Devenir cultivateur</a>
               {isAuthenticated ? (
                 <>
+                  <div className="flex items-center space-x-2 py-2">
+                    <div className="w-6 h-6 bg-green-500 rounded-full flex items-center justify-center">
+                      <span className="text-white text-xs font-medium">
+                        {user?.name.charAt(0).toUpperCase()}
+                      </span>
+                    </div>
+                    <span className="text-gray-700">{user?.name}</span>
+                    {user?.role && <RoleBadge role={user.role} />}
+                  </div>
                   <Button
                     variant="ghost"
                     onClick={onDashboardClick}

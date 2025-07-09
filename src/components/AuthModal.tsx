@@ -4,9 +4,10 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { X, Mail, Lock, User } from 'lucide-react';
+import { Badge } from '@/components/ui/badge';
+import { X, Mail, Lock, User, Sprout, Home } from 'lucide-react';
 import { useAppDispatch } from '@/store/hooks';
-import { setUser } from '@/store/slices/authSlice';
+import { setUser, UserRole } from '@/store/slices/authSlice';
 
 interface AuthModalProps {
   isOpen: boolean;
@@ -15,6 +16,7 @@ interface AuthModalProps {
 
 const AuthModal = ({ isOpen, onClose }: AuthModalProps) => {
   const [isLogin, setIsLogin] = useState(true);
+  const [selectedRole, setSelectedRole] = useState<UserRole>('owner');
   const [formData, setFormData] = useState({
     name: '',
     email: '',
@@ -30,7 +32,8 @@ const AuthModal = ({ isOpen, onClose }: AuthModalProps) => {
       id: '1',
       name: formData.name || 'Utilisateur',
       email: formData.email,
-      avatar: `https://api.dicebear.com/7.x/initials/svg?seed=${formData.name || 'U'}`
+      avatar: `https://api.dicebear.com/7.x/initials/svg?seed=${formData.name || 'U'}`,
+      role: isLogin ? 'owner' : selectedRole // Pour la démo, les utilisateurs existants sont propriétaires
     };
     
     dispatch(setUser(user));
@@ -43,6 +46,23 @@ const AuthModal = ({ isOpen, onClose }: AuthModalProps) => {
       [e.target.name]: e.target.value
     }));
   };
+
+  const roleOptions = [
+    {
+      value: 'owner' as UserRole,
+      title: 'Propriétaire de terre',
+      description: 'Je possède des terres à mettre en culture',
+      icon: Home,
+      color: 'bg-green-100 text-green-800'
+    },
+    {
+      value: 'cultivator' as UserRole,
+      title: 'Cultivateur',
+      description: 'Je souhaite cultiver des terres',
+      icon: Sprout,
+      color: 'bg-blue-100 text-blue-800'
+    }
+  ];
 
   if (!isOpen) return null;
 
@@ -71,7 +91,46 @@ const AuthModal = ({ isOpen, onClose }: AuthModalProps) => {
         </CardHeader>
         
         <CardContent>
-          <form onSubmit={handleSubmit} className="space-y-4">
+          <form onSubmit={handleSubmit} className="space-y-6">
+            {!isLogin && (
+              <div className="space-y-4">
+                <div>
+                  <Label className="text-base font-medium">Je suis un :</Label>
+                  <div className="grid grid-cols-1 gap-3 mt-3">
+                    {roleOptions.map((role) => {
+                      const IconComponent = role.icon;
+                      return (
+                        <div
+                          key={role.value}
+                          onClick={() => setSelectedRole(role.value)}
+                          className={`cursor-pointer border-2 rounded-lg p-4 transition-all ${
+                            selectedRole === role.value
+                              ? 'border-green-500 bg-green-50'
+                              : 'border-gray-200 hover:border-gray-300'
+                          }`}
+                        >
+                          <div className="flex items-start space-x-3">
+                            <div className={`p-2 rounded-lg ${role.color}`}>
+                              <IconComponent className="w-5 h-5" />
+                            </div>
+                            <div className="flex-1">
+                              <h3 className="font-medium text-gray-900">{role.title}</h3>
+                              <p className="text-sm text-gray-600 mt-1">{role.description}</p>
+                            </div>
+                            {selectedRole === role.value && (
+                              <div className="w-5 h-5 bg-green-500 rounded-full flex items-center justify-center">
+                                <div className="w-2 h-2 bg-white rounded-full"></div>
+                              </div>
+                            )}
+                          </div>
+                        </div>
+                      );
+                    })}
+                  </div>
+                </div>
+              </div>
+            )}
+
             {!isLogin && (
               <div className="space-y-2">
                 <Label htmlFor="name">Nom complet</Label>
