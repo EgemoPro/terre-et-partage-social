@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
@@ -36,7 +35,7 @@ const CultivatorDashboard = () => {
         },
         soilType: 'Argileux',
         waterAccess: true,
-        equipmentAvailable: ['Tracteur', 'Système d\'irrigation'],
+        equipmentAvailable: [true, true],
         preferredCrops: ['Tomates', 'Courgettes', 'Aubergines'],
         availableFrom: '2024-03-15',
         sharePercentage: 30
@@ -54,7 +53,7 @@ const CultivatorDashboard = () => {
         },
         soilType: 'Limoneux',
         waterAccess: true,
-        equipmentAvailable: ['Outils manuels'],
+        equipmentAvailable: [false],
         preferredCrops: ['Pommes de terre', 'Carottes', 'Poireaux'],
         availableFrom: '2024-04-01',
         rentPrice: 200
