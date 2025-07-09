@@ -8,6 +8,7 @@ import { Badge } from '@/components/ui/badge';
 import { X, Mail, Lock, User, Sprout, Home } from 'lucide-react';
 import { useAppDispatch } from '@/store/hooks';
 import { setUser, UserRole } from '@/store/slices/authSlice';
+import RoleSpecificSignupForm from './RoleSpecificSignupForm';
 
 interface AuthModalProps {
   isOpen: boolean;
@@ -20,7 +21,15 @@ const AuthModal = ({ isOpen, onClose }: AuthModalProps) => {
   const [formData, setFormData] = useState({
     name: '',
     email: '',
-    password: ''
+    password: '',
+    // Additional fields for role-specific data
+    location: '',
+    phone: '',
+    bio: '',
+    experience: '',
+    landTypes: [] as string[],
+    preferredCrops: [] as string[],
+    availability: ''
   });
   const dispatch = useAppDispatch();
 
@@ -29,15 +38,34 @@ const AuthModal = ({ isOpen, onClose }: AuthModalProps) => {
     
     // Simulation d'authentification
     const user = {
-      id: '1',
+      id: Date.now().toString(),
       name: formData.name || 'Utilisateur',
       email: formData.email,
       avatar: `https://api.dicebear.com/7.x/initials/svg?seed=${formData.name || 'U'}`,
-      role: isLogin ? 'owner' : selectedRole // Pour la démo, les utilisateurs existants sont propriétaires
+      role: isLogin ? 'owner' : selectedRole,
+      // Additional profile data
+      location: formData.location,
+      phone: formData.phone,
+      bio: formData.bio,
+      experience: formData.experience
     };
     
     dispatch(setUser(user));
     onClose();
+    
+    // Reset form
+    setFormData({
+      name: '',
+      email: '',
+      password: '',
+      location: '',
+      phone: '',
+      bio: '',
+      experience: '',
+      landTypes: [],
+      preferredCrops: [],
+      availability: ''
+    });
   };
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -68,7 +96,7 @@ const AuthModal = ({ isOpen, onClose }: AuthModalProps) => {
 
   return (
     <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 p-4">
-      <Card className="w-full max-w-md relative animate-fade-in">
+      <Card className="w-full max-w-2xl max-h-[90vh] overflow-y-auto relative animate-fade-in">
         <Button
           variant="ghost"
           size="sm"
@@ -131,6 +159,7 @@ const AuthModal = ({ isOpen, onClose }: AuthModalProps) => {
               </div>
             )}
 
+            {/* Basic fields */}
             {!isLogin && (
               <div className="space-y-2">
                 <Label htmlFor="name">Nom complet</Label>
@@ -183,6 +212,15 @@ const AuthModal = ({ isOpen, onClose }: AuthModalProps) => {
                 />
               </div>
             </div>
+
+            {/* Role-specific form */}
+            {!isLogin && (
+              <RoleSpecificSignupForm
+                role={selectedRole}
+                formData={formData}
+                setFormData={setFormData}
+              />
+            )}
             
             <Button type="submit" className="w-full earth-gradient text-white">
               {isLogin ? 'Se connecter' : 'Créer le compte'}

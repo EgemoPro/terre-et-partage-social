@@ -9,12 +9,15 @@ import { Search, MapPin, Calendar, Droplets, Tractor, Heart, MessageCircle, Tren
 import { useAppSelector, useAppDispatch } from '@/store/hooks';
 import { setPublicLands, setSearchFilters } from '@/store/slices/publicLandsSlice';
 import { PublicLand } from '@/store/slices/publicLandsSlice';
+import { setSentProposals, setReceivedProposals } from '@/store/slices/proposalsSlice';
 import LandSearchCard from './LandSearchCard';
 import CultivatorStats from './CultivatorStats';
+import ProposalCard from './ProposalCard';
 
 const CultivatorDashboard = () => {
   const [activeTab, setActiveTab] = useState('search');
   const { lands, searchFilters } = useAppSelector((state) => state.publicLands);
+  const { sentProposals, receivedProposals } = useAppSelector((state) => state.proposals);
   const { user } = useAppSelector((state) => state.auth);
   const dispatch = useAppDispatch();
 
@@ -78,7 +81,30 @@ const CultivatorDashboard = () => {
       }
     ];
     dispatch(setPublicLands(mockPublicLands));
-  }, [dispatch]);
+
+    // Mock proposals data
+    const mockSentProposals = [
+      {
+        id: '1',
+        fromUserId: user?.id || '1',
+        toUserId: 'owner1',
+        landId: '1',
+        type: 'cultivation_request' as const,
+        status: 'pending' as const,
+        message: 'Bonjour, je suis très intéressé par votre terrain bio. J\'ai 5 ans d\'expérience en jardinage...',
+        proposedTerms: {
+          sharePercentage: 30,
+          duration: '1 an',
+          startDate: '2024-04-01'
+        },
+        createdAt: '2024-01-15T10:00:00Z',
+        updatedAt: '2024-01-15T10:00:00Z'
+      }
+    ];
+
+    dispatch(setSentProposals(mockSentProposals));
+    dispatch(setReceivedProposals([]));
+  }, [dispatch, user?.id]);
 
   const handleSearch = (query: string) => {
     dispatch(setSearchFilters({ location: query }));
@@ -120,7 +146,14 @@ const CultivatorDashboard = () => {
           <TabsList>
             <TabsTrigger value="search">Recherche de terres</TabsTrigger>
             <TabsTrigger value="projects">Mes projets</TabsTrigger>
-            <TabsTrigger value="proposals">Mes propositions</TabsTrigger>
+            <TabsTrigger value="proposals">
+              Mes propositions
+              {sentProposals.length > 0 && (
+                <Badge className="ml-2 bg-blue-500 text-white text-xs">
+                  {sentProposals.length}
+                </Badge>
+              )}
+            </TabsTrigger>
             <TabsTrigger value="messages">Messages</TabsTrigger>
           </TabsList>
 
@@ -220,16 +253,68 @@ const CultivatorDashboard = () => {
             </Card>
           </TabsContent>
 
-          <TabsContent value="proposals">
-            <Card>
-              <CardHeader>
-                <CardTitle>Mes propositions</CardTitle>
-                <CardDescription>Propositions envoyées aux propriétaires</CardDescription>
-              </CardHeader>
-              <CardContent>
-                <p className="text-gray-600">Aucune proposition envoyée pour le moment.</p>
-              </CardContent>
-            </Card>
+          <TabsContent value="proposals" className="space-y-6">
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+              {/* Sent Proposals */}
+              <div>
+                <Card>
+                  <CardHeader>
+                    <CardTitle className="flex items-center">
+                      <MessageCircle className="w-5 h-5 mr-2" />
+                      Propositions envoyées
+                    </CardTitle>
+                    <CardDescription>
+                      Propositions que vous avez envoyées aux propriétaires
+                    </CardDescription>
+                  </CardHeader>
+                  <CardContent>
+                    {sentProposals.length > 0 ? (
+                      <div className="space-y-4">
+                        {sentProposals.map((proposal) => (
+                          <ProposalCard 
+                            key={proposal.id} 
+                            proposal={proposal} 
+                            isReceived={false}
+                          />
+                        ))}
+                      </div>
+                    ) : (
+                      <p className="text-gray-600">Aucune proposition envoyée pour le moment.</p>
+                    )}
+                  </CardContent>
+                </Card>
+              </div>
+
+              {/* Received Proposals (for cultivators who might also be owners) */}
+              <div>
+                <Card>
+                  <CardHeader>
+                    <CardTitle className="flex items-center">
+                      <TrendingUp className="w-5 h-5 mr-2" />
+                      Propositions reçues
+                    </CardTitle>
+                    <CardDescription>
+                      Demandes de collaboration reçues
+                    </CardDescription>
+                  </CardHeader>
+                  <CardContent>
+                    {receivedProposals.length > 0 ? (
+                      <div className="space-y-4">
+                        {receivedProposals.map((proposal) => (
+                          <ProposalCard 
+                            key={proposal.id} 
+                            proposal={proposal} 
+                            isReceived={true}
+                          />
+                        ))}
+                      </div>
+                    ) : (
+                      <p className="text-gray-600">Aucune proposition reçue pour le moment.</p>
+                    )}
+                  </CardContent>
+                </Card>
+              </div>
+            </div>
           </TabsContent>
 
           <TabsContent value="messages">
