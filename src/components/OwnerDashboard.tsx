@@ -1,16 +1,19 @@
 import { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Progress } from '@/components/ui/progress';
-import { Badge } from '@/components/ui/badge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Plus, MapPin, Calendar, Sprout, ShoppingBasket, Eye, MessageSquare, TrendingUp, Users } from 'lucide-react';
+import { Plus, Sprout } from 'lucide-react';
 import { useAppSelector, useAppDispatch } from '@/store/hooks';
 import { setLands, setSelectedLand } from '@/store/slices/landsSlice';
 import { Land } from '@/store/slices/landsSlice';
 import EnhancedAddLandModal from './EnhancedAddLandModal';
 import LandDetailModal from './LandDetailModal';
 import MessagingSystem from './MessagingSystem';
+import DashboardStats from './dashboard/DashboardStats';
+import LandCard from './dashboard/LandCard';
+import ActivityFeed from './dashboard/ActivityFeed';
+import QuickActions from './dashboard/QuickActions';
 
 const OwnerDashboard = () => {
   const [showAddModal, setShowAddModal] = useState(false);
@@ -75,28 +78,32 @@ const OwnerDashboard = () => {
     setShowDetailModal(true);
   };
 
-  const totalRevenue = lands.reduce((sum, land) => sum + (land.status === 'harvest' ? 150 : 0), 0);
-  const activeProjects = lands.filter(land => land.status === 'cultivated').length;
-  const avgProgress = lands.length > 0 ? 
-    lands.reduce((sum, land) => sum + land.progress, 0) / lands.length : 0;
+  const stats = {
+    totalLands: lands.length,
+    availableLands: lands.filter(l => l.status === 'available').length,
+    activeProjects: lands.filter(land => land.status === 'cultivated').length,
+    avgProgress: lands.length > 0 ? lands.reduce((sum, land) => sum + land.progress, 0) / lands.length : 0,
+    estimatedRevenue: lands.reduce((sum, land) => sum + (land.status === 'harvest' ? 150 : 0), 0),
+    unreadMessages: 2
+  };
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-background">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* Header */}
         <div className="mb-8">
           <div className="flex justify-between items-center">
             <div>
-              <h1 className="text-3xl font-bold text-gray-900">
+              <h1 className="text-3xl font-bold text-foreground">
                 Bonjour, {user?.name} 👋
               </h1>
-              <p className="text-gray-600 mt-2">
+              <p className="text-muted-foreground mt-2">
                 Gérez vos terres et suivez la progression de vos cultures
               </p>
             </div>
             <Button
               onClick={() => setShowAddModal(true)}
-              className="earth-gradient text-white"
+              className="earth-gradient"
             >
               <Plus className="w-4 h-4 mr-2" />
               Ajouter une terre
@@ -104,59 +111,9 @@ const OwnerDashboard = () => {
           </div>
         </div>
 
-        {/* Enhanced Stats Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
-          <Card>
-            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium">Terres totales</CardTitle>
-              <MapPin className="h-4 w-4 text-muted-foreground" />
-            </CardHeader>
-            <CardContent>
-              <div className="text-2xl font-bold">{lands.length}</div>
-              <p className="text-xs text-muted-foreground">
-                {lands.filter(l => l.status === 'available').length} disponibles
-              </p>
-            </CardContent>
-          </Card>
-          
-          <Card>
-            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium">Projets actifs</CardTitle>
-              <Sprout className="h-4 w-4 text-muted-foreground" />
-            </CardHeader>
-            <CardContent>
-              <div className="text-2xl font-bold">{activeProjects}</div>
-              <p className="text-xs text-muted-foreground">
-                Progression moyenne: {Math.round(avgProgress)}%
-              </p>
-            </CardContent>
-          </Card>
-          
-          <Card>
-            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium">Revenus estimés</CardTitle>
-              <TrendingUp className="h-4 w-4 text-muted-foreground" />
-            </CardHeader>
-            <CardContent>
-              <div className="text-2xl font-bold">{totalRevenue}€</div>
-              <p className="text-xs text-muted-foreground">
-                Ce trimestre
-              </p>
-            </CardContent>
-          </Card>
-
-          <Card>
-            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium">Messages</CardTitle>
-              <MessageSquare className="h-4 w-4 text-muted-foreground" />
-            </CardHeader>
-            <CardContent>
-              <div className="text-2xl font-bold">3</div>
-              <p className="text-xs text-muted-foreground">
-                2 non lus
-              </p>
-            </CardContent>
-          </Card>
+        {/* Stats Cards */}
+        <div className="mb-8">
+          <DashboardStats stats={stats} />
         </div>
 
         {/* Tabs for different views */}
@@ -169,146 +126,40 @@ const OwnerDashboard = () => {
           </TabsList>
 
           <TabsContent value="overview" className="space-y-6">
-            {/* Recent Activity */}
-            <Card>
-              <CardHeader>
-                <CardTitle>Activité récente</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className="space-y-4">
-                  <div className="flex items-center space-x-4">
-                    <div className="w-2 h-2 bg-green-500 rounded-full"></div>
-                    <div className="flex-1">
-                      <p className="text-sm font-medium">Nouvelle proposition reçue</p>
-                      <p className="text-xs text-gray-500">Marie Cultivatrice - Il y a 2 heures</p>
-                    </div>
-                  </div>
-                  <div className="flex items-center space-x-4">
-                    <div className="w-2 h-2 bg-blue-500 rounded-full"></div>
-                    <div className="flex-1">
-                      <p className="text-sm font-medium">Mise à jour de culture</p>
-                      <p className="text-xs text-gray-500">Terrain de Provence - Il y a 1 jour</p>
-                    </div>
-                  </div>
-                  <div className="flex items-center space-x-4">
-                    <div className="w-2 h-2 bg-orange-500 rounded-full"></div>
-                    <div className="flex-1">
-                      <p className="text-sm font-medium">Récolte planifiée</p>
-                      <p className="text-xs text-gray-500">Dans 2 semaines</p>
-                    </div>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
-
-            {/* Quick Actions */}
-            <Card>
-              <CardHeader>
-                <CardTitle>Actions rapides</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-                  <Button variant="outline" className="h-20 flex-col">
-                    <Plus className="w-6 h-6 mb-2" />
-                    <span className="text-sm">Nouvelle terre</span>
-                  </Button>
-                  <Button variant="outline" className="h-20 flex-col">
-                    <Users className="w-6 h-6 mb-2" />
-                    <span className="text-sm">Trouver cultivateur</span>
-                  </Button>
-                  <Button variant="outline" className="h-20 flex-col">
-                    <MessageSquare className="w-6 h-6 mb-2" />
-                    <span className="text-sm">Messages</span>
-                  </Button>
-                  <Button variant="outline" className="h-20 flex-col">
-                    <TrendingUp className="w-6 h-6 mb-2" />
-                    <span className="text-sm">Rapports</span>
-                  </Button>
-                </div>
-              </CardContent>
-            </Card>
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+              <ActivityFeed />
+              <QuickActions 
+                onAddLand={() => setShowAddModal(true)}
+                onFindCultivator={() => setActiveTab('cultivators')}
+                onOpenMessages={() => setActiveTab('messages')}
+                onViewReports={() => setActiveTab('analytics')}
+              />
+            </div>
           </TabsContent>
 
           <TabsContent value="lands">
-            {/* Existing Lands Grid */}
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               {lands.map((land) => (
-                <Card key={land.id} className="overflow-hidden hover:shadow-lg transition-shadow">
-                  <div className="aspect-video bg-gray-200 relative overflow-hidden">
-                    {land.images.length > 0 ? (
-                      <img
-                        src={land.images[0]}
-                        alt={land.title}
-                        className="w-full h-full object-cover"
-                      />
-                    ) : (
-                      <div className="w-full h-full flex items-center justify-center bg-green-100">
-                        <Sprout className="w-12 h-12 text-green-500" />
-                      </div>
-                    )}
-                    <Badge className={`absolute top-2 right-2 ${getStatusColor(land.status)}`}>
-                      {getStatusText(land.status)}
-                    </Badge>
-                  </div>
-                  
-                  <CardHeader>
-                    <CardTitle className="text-lg">{land.title}</CardTitle>
-                    <CardDescription className="line-clamp-2">
-                      {land.description}
-                    </CardDescription>
-                  </CardHeader>
-                  
-                  <CardContent className="space-y-4">
-                    <div className="flex items-center text-sm text-gray-600">
-                      <MapPin className="w-4 h-4 mr-1" />
-                      {land.location}
-                    </div>
-                    
-                    <div className="text-sm text-gray-600">
-                      <span className="font-medium">{land.size} m²</span>
-                    </div>
-                    
-                    {land.status === 'cultivated' && (
-                      <div className="space-y-2">
-                        <div className="flex justify-between text-sm">
-                          <span>Progression</span>
-                          <span>{land.progress}%</span>
-                        </div>
-                        <Progress value={land.progress} className="h-2" />
-                        {land.estimatedHarvest && (
-                          <div className="flex items-center text-sm text-gray-600">
-                            <Calendar className="w-4 h-4 mr-1" />
-                            Récolte prévue: {new Date(land.estimatedHarvest).toLocaleDateString('fr-FR')}
-                          </div>
-                        )}
-                      </div>
-                    )}
-                    
-                    <Button
-                      variant="outline"
-                      onClick={() => handleViewLand(land)}
-                      className="w-full"
-                    >
-                      <Eye className="w-4 h-4 mr-2" />
-                      Voir les détails
-                    </Button>
-                  </CardContent>
-                </Card>
+                <LandCard 
+                  key={land.id} 
+                  land={land} 
+                  onViewDetails={handleViewLand}
+                />
               ))}
             </div>
 
             {lands.length === 0 && (
               <div className="text-center py-12">
-                <Sprout className="w-16 h-16 text-gray-400 mx-auto mb-4" />
-                <h3 className="text-lg font-medium text-gray-900 mb-2">
+                <Sprout className="w-16 h-16 text-muted-foreground mx-auto mb-4" />
+                <h3 className="text-lg font-medium text-foreground mb-2">
                   Aucune terre ajoutée
                 </h3>
-                <p className="text-gray-600 mb-4">
+                <p className="text-muted-foreground mb-4">
                   Commencez par ajouter votre première parcelle de terre.
                 </p>
                 <Button
                   onClick={() => setShowAddModal(true)}
-                  className="earth-gradient text-white"
+                  className="earth-gradient"
                 >
                   <Plus className="w-4 h-4 mr-2" />
                   Ajouter une terre
@@ -334,7 +185,7 @@ const OwnerDashboard = () => {
                         <span className="text-sm font-medium">{land.title}</span>
                         <div className="flex items-center space-x-2">
                           <Progress value={land.progress} className="w-20 h-2" />
-                          <span className="text-sm text-gray-600">{land.progress}%</span>
+                          <span className="text-sm text-muted-foreground">{land.progress}%</span>
                         </div>
                       </div>
                     ))}

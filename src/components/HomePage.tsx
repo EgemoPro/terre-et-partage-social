@@ -11,16 +11,16 @@ const HomePage = ({ onAuthClick }: HomePageProps) => {
   return (
     <div className="min-h-screen">
       {/* Hero Section */}
-      <section className="relative bg-hero-gradient py-20 lg:py-32">
+      <section className="relative hero-gradient py-20 lg:py-32">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center">
             <div className="animate-fade-in">
-              <h1 className="text-4xl md:text-6xl font-bold text-gray-900 mb-6">
+              <h1 className="text-4xl md:text-6xl font-bold text-foreground mb-6">
                 Partagez vos terres,
                 <br />
-                <span className="text-green-600">cultivez l'avenir</span>
+                <span className="text-primary">cultivez l'avenir</span>
               </h1>
-              <p className="text-xl text-gray-600 mb-8 max-w-3xl mx-auto">
+              <p className="text-xl text-muted-foreground mb-8 max-w-3xl mx-auto">
                 Connectez-vous avec des cultivateurs passionnés qui transformeront vos terres en potagers productifs. 
                 Suivez l'évolution de vos parcelles en temps réel.
               </p>
@@ -28,7 +28,7 @@ const HomePage = ({ onAuthClick }: HomePageProps) => {
                 <Button 
                   onClick={onAuthClick}
                   size="lg" 
-                  className="earth-gradient text-white text-lg px-8 py-3"
+                  className="earth-gradient text-lg px-8 py-3"
                 >
                   <Sprout className="w-5 h-5 mr-2" />
                   Commencer maintenant
@@ -42,7 +42,7 @@ const HomePage = ({ onAuthClick }: HomePageProps) => {
           
           {/* Hero Image */}
           <div className="mt-16 animate-fade-in">
-            <div className="aspect-video bg-white/80 backdrop-blur-md rounded-xl overflow-hidden shadow-2xl">
+            <div className="aspect-video glass-effect rounded-xl overflow-hidden shadow-2xl">
               <img
                 src="https://images.unsplash.com/photo-1500382017468-9049fed747ef?w=1200&h=600&fit=crop"
                 alt="Terres cultivées"
@@ -54,13 +54,13 @@ const HomePage = ({ onAuthClick }: HomePageProps) => {
       </section>
 
       {/* Features Section */}
-      <section className="py-20 bg-white">
+      <section className="py-20 bg-background">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
-            <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
+            <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-4">
               Comment ça marche ?
             </h2>
-            <p className="text-xl text-gray-600 max-w-2xl mx-auto">
+            <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
               Trois étapes simples pour transformer vos terres en potagers productifs
             </p>
           </div>

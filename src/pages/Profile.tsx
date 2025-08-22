@@ -1,5 +1,6 @@
 
 import { useState } from 'react';
+import { useAppSelector } from '@/store/hooks';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
@@ -7,9 +8,8 @@ import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { Badge } from '@/components/ui/badge';
 import { Separator } from '@/components/ui/separator';
-import { User, Mail, Phone, MapPin, Calendar, Edit2, Save, X } from 'lucide-react';
-import { useAppSelector } from '@/store/hooks';
-import Header from '@/components/Header';
+import { User, Mail, Phone, MapPin, Edit } from 'lucide-react';
+import AppLayout from '@/components/layout/AppLayout';
 
 const Profile = () => {
   const { user } = useAppSelector((state) => state.auth);
@@ -56,17 +56,15 @@ const Profile = () => {
   ];
 
   return (
-    <div className="min-h-screen bg-background">
-      <Header onAuthClick={() => {}} onDashboardClick={() => {}} />
-      
+    <AppLayout>
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         {/* Profile Header */}
         <Card className="mb-8">
           <CardHeader>
             <div className="flex items-start justify-between">
               <div className="flex items-center space-x-6">
-                <div className="w-24 h-24 bg-green-500 rounded-full flex items-center justify-center">
-                  <span className="text-3xl font-bold text-white">
+                <div className="w-24 h-24 bg-primary rounded-full flex items-center justify-center">
+                  <span className="text-3xl font-bold text-primary-foreground">
                     {user?.name?.charAt(0).toUpperCase() || 'U'}
                   </span>
                 </div>
@@ -78,7 +76,7 @@ const Profile = () => {
                       month: 'long' 
                     })}
                   </CardDescription>
-                  <Badge className="mt-2 bg-green-100 text-green-800">
+                  <Badge className="mt-2 bg-primary/10 text-primary">
                     Membre vérifié
                   </Badge>
                 </div>
@@ -267,7 +265,6 @@ const Profile = () => {
                     <div className="w-2 h-2 bg-purple-500 rounded-full mt-2"></div>
                     <div>
                       <p className="text-sm font-medium">Profil créé</p>
-                      <p className="text-xs text-gray-500">Il y a 2 mois</p>
                     </div>
                   </div>
                 </div>
@@ -276,7 +273,7 @@ const Profile = () => {
           </div>
         </div>
       </div>
-    </div>
+    </AppLayout>
   );
 };
 

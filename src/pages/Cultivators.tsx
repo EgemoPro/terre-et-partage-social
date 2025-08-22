@@ -1,9 +1,10 @@
 
+import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import { Button } from '@/components/ui/button';
-import { Star, MapPin, Calendar, Award } from 'lucide-react';
-import Header from '@/components/Header';
+import { Input } from '@/components/ui/input';
+import { Star, MapPin, Calendar, Award, Filter } from 'lucide-react';
+import AppLayout from '@/components/layout/AppLayout';
 
 const Cultivators = () => {
   const cultivators = [
@@ -58,16 +59,14 @@ const Cultivators = () => {
   ];
 
   return (
-    <div className="min-h-screen bg-background">
-      <Header onAuthClick={() => {}} onDashboardClick={() => {}} />
-      
+    <AppLayout>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         {/* Hero Section */}
         <div className="text-center mb-16">
-          <h1 className="text-4xl md:text-5xl font-bold text-gray-900 mb-6">
+          <h1 className="text-4xl md:text-5xl font-bold text-foreground mb-6">
             Nos Cultivateurs Experts
           </h1>
-          <p className="text-xl text-gray-600 max-w-3xl mx-auto">
+          <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
             Découvrez notre équipe de cultivateurs passionnés et expérimentés, 
             prêts à transformer vos terres en jardins productifs.
           </p>
@@ -77,26 +76,26 @@ const Cultivators = () => {
         <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-16">
           <Card className="text-center">
             <CardContent className="pt-6">
-              <div className="text-3xl font-bold text-green-600 mb-2">50+</div>
-              <p className="text-gray-600">Cultivateurs actifs</p>
+              <div className="text-3xl font-bold text-primary mb-2">50+</div>
+              <p className="text-muted-foreground">Cultivateurs actifs</p>
             </CardContent>
           </Card>
           <Card className="text-center">
             <CardContent className="pt-6">
               <div className="text-3xl font-bold text-blue-600 mb-2">200+</div>
-              <p className="text-gray-600">Terres cultivées</p>
+              <p className="text-muted-foreground">Terres cultivées</p>
             </CardContent>
           </Card>
           <Card className="text-center">
             <CardContent className="pt-6">
               <div className="text-3xl font-bold text-orange-600 mb-2">4.8</div>
-              <p className="text-gray-600">Note moyenne</p>
+              <p className="text-muted-foreground">Note moyenne</p>
             </CardContent>
           </Card>
           <Card className="text-center">
             <CardContent className="pt-6">
               <div className="text-3xl font-bold text-purple-600 mb-2">95%</div>
-              <p className="text-gray-600">Satisfaction client</p>
+              <p className="text-muted-foreground">Satisfaction client</p>
             </CardContent>
           </Card>
         </div>
@@ -120,19 +119,19 @@ const Cultivators = () => {
                           <Star className="w-4 h-4 text-yellow-400 fill-current" />
                           <span className="text-sm font-medium ml-1">{cultivator.rating}</span>
                         </div>
-                        <span className="text-gray-400">•</span>
-                        <span className="text-sm text-gray-600">{cultivator.totalLands} terres</span>
+                        <span className="text-muted-foreground">•</span>
+                        <span className="text-sm text-muted-foreground">{cultivator.totalLands} terres</span>
                       </div>
                     </div>
                   </div>
-                  <Badge variant="outline" className="text-green-600 border-green-600">
+                  <Badge variant="outline" className="text-primary border-primary">
                     {cultivator.experience}
                   </Badge>
                 </div>
               </CardHeader>
               
               <CardContent className="space-y-4">
-                <div className="flex items-center text-sm text-gray-600">
+                <div className="flex items-center text-sm text-muted-foreground">
                   <MapPin className="w-4 h-4 mr-2" />
                   {cultivator.location}
                 </div>
@@ -142,7 +141,7 @@ const Cultivators = () => {
                 </CardDescription>
                 
                 <div>
-                  <h4 className="font-medium text-gray-900 mb-2">Spécialités :</h4>
+                  <h4 className="font-medium text-foreground mb-2">Spécialités :</h4>
                   <div className="flex flex-wrap gap-2">
                     {cultivator.specialties.map((specialty, index) => (
                       <Badge key={index} variant="secondary">
@@ -153,18 +152,18 @@ const Cultivators = () => {
                 </div>
                 
                 <div>
-                  <h4 className="font-medium text-gray-900 mb-2">Certifications :</h4>
+                  <h4 className="font-medium text-foreground mb-2">Certifications :</h4>
                   <div className="space-y-1">
                     {cultivator.achievements.map((achievement, index) => (
-                      <div key={index} className="flex items-center text-sm text-gray-600">
-                        <Award className="w-3 h-3 mr-2 text-green-600" />
+                      <div key={index} className="flex items-center text-sm text-muted-foreground">
+                        <Award className="w-3 h-3 mr-2 text-primary" />
                         {achievement}
                       </div>
                     ))}
                   </div>
                 </div>
                 
-                <Button className="w-full earth-gradient text-white">
+                <Button className="w-full earth-gradient">
                   Contacter {cultivator.name}
                 </Button>
               </CardContent>
@@ -173,19 +172,19 @@ const Cultivators = () => {
         </div>
 
         {/* CTA Section */}
-        <div className="mt-16 bg-green-600 rounded-2xl p-12 text-center text-white">
+        <div className="mt-16 bg-primary rounded-2xl p-12 text-center text-primary-foreground">
           <h2 className="text-3xl font-bold mb-4">
             Vous êtes cultivateur ?
           </h2>
-          <p className="text-xl text-green-100 mb-8">
+          <p className="text-xl mb-8 opacity-90">
             Rejoignez notre communauté et aidez à valoriser les terres inutilisées.
           </p>
-          <Button size="lg" className="bg-white text-green-600 hover:bg-gray-100">
+          <Button size="lg" className="bg-background text-foreground hover:bg-background/90">
             Devenir cultivateur partenaire
           </Button>
         </div>
       </div>
-    </div>
+    </AppLayout>
   );
 };
 
